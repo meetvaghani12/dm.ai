@@ -1,8 +1,13 @@
 import { SignUp } from "@clerk/nextjs";
-type Props = {};
+import { redirect } from "next/navigation";
 
-function page({}: Props) {
-  return <SignUp />;
+export default function Page() {
+  return (
+    <div className="flex min-h-screen w-full items-center justify-center">
+      <SignUp
+        afterSignUpUrl="/auth-callback"
+        redirectUrl="/auth-callback"
+      />
+    </div>
+  );
 }
-
-export default page;

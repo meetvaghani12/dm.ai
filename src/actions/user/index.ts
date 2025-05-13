@@ -53,15 +53,28 @@ export const onBoardUser = async () => {
         },
       };
     }
+    
+    // If user doesn't exist in our database, create them with Clerk data
+    if (!user.firstName || !user.lastName || !user.emailAddresses[0]) {
+      console.error("Missing required user information from Clerk");
+      return { status: 400, error: "Missing user information" };
+    }
+    
     const created = await createUser(
       user.id,
-      user.firstName!,
-      user.lastName!,
+      user.firstName,
+      user.lastName,
       user.emailAddresses[0].emailAddress
     );
+    
+    if (!created) {
+      console.error("Failed to create user in database");
+      return { status: 500, error: "User creation failed" };
+    }
+    
     return { status: 201, data: created };
   } catch (error) {
-    console.log(error);
+    console.error("Error in onBoardUser:", error);
     return { status: 500 };
   }
 };
